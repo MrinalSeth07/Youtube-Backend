@@ -21,6 +21,7 @@ const uploadOnCloudinary = async(path) => {
         })  
         // file has been uploaded
         console.log(" file has been uploaded " , response.url);
+        fs.unlinkSync(path)
         return response;
     }catch{
         fs.unlinkSync(path) // remove the file from the server as the operation got failed
