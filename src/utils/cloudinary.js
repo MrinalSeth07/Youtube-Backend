@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs"
+import { ApiError } from './CustomApierror';
 
 
 
@@ -28,4 +29,45 @@ const uploadOnCloudinary = async(path) => {
         return null;
     }
 }
-export { uploadOnCloudinary }
+const deleteOnCloudinary = async (publicId) => {
+
+    if (!publicId) {
+        throw new ApiError(
+            400,
+            "Public ID is required"
+        );
+    }
+
+    try {
+
+        const response =
+            await cloudinary.uploader.destroy(
+                publicId,
+                {
+                    invalidate: true,
+                }
+            );
+
+        return response;
+
+    } catch (error) {
+
+        throw new ApiError(
+            500,
+            "Error deleting file from Cloudinary"
+        );
+
+    }
+
+};
+const getPublicId = (url) => {
+
+    const urlParts = url.split("/");
+
+    const fileName = urlParts.pop();
+
+    const folder = urlParts.pop();
+
+    return `${folder}/${fileName.split(".")[0]}`;
+};
+export { uploadOnCloudinary, deleteOnCloudinary ,getPublicId}
