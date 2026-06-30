@@ -1,15 +1,15 @@
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs"
-import { ApiError } from './CustomApierror';
+import { ApiError } from './CustomApierror.js';
 
 
 
 
     // Configuration
     cloudinary.config({ 
-        cloud_name: processes.env.CLOUDINARY_CLOUD_NAME, 
-        api_key: processes.env.CLOUDINARY_API_KEY, 
-        api_secret: processes.env.CLOUDINARY_API_SECRET, // Click 'View API Keys' above to copy your API secret
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+        api_key: process.env.CLOUDINARY_API_KEY, 
+        api_secret: process.env.CLOUDINARY_API_SECRET, // Click 'View API Keys' above to copy your API secret
     });
 
 const uploadOnCloudinary = async(path) => {
@@ -22,7 +22,7 @@ const uploadOnCloudinary = async(path) => {
         })  
         // file has been uploaded
         console.log(" file has been uploaded " , response.url);
-        fs.unlinkSync(path)
+        fs.unlinkSync(path) 
         return response;
     }catch{
         fs.unlinkSync(path) // remove the file from the server as the operation got failed

@@ -4,9 +4,9 @@ import { registerUser, loginUser, logOut, refreshAccessToken, changeCurrentPassw
     updateUserAvatar,
     updateUserCoverImage,
     getUserChannelProfile,
-    getWatchHistory,} from "../controllers/user.controller"
-import { upload } from "../middleware/multer.middleware"
-import { verifyJWT  } from "../middleware/auth.middleware"
+    getWatchHistory,} from "../controllers/user.controller.js"
+import { upload } from "../middleware/multer.middleware.js"
+import { verifyJWT  } from "../middleware/auth.middleware.js"
 const router = Router()
 router.route("/register").post(
     upload.fields([
