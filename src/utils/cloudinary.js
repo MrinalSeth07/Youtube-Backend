@@ -3,32 +3,46 @@ import fs from "fs"
 import { ApiError } from './CustomApierror.js';
 
 
-
+console.log(process.env.CLOUDINARY_CLOUD_NAME);
+console.log(process.env.CLOUDINARY_API_KEY);
+console.log(process.env.CLOUDINARY_API_SECRET);
 
     // Configuration
     cloudinary.config({ 
         cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
         api_key: process.env.CLOUDINARY_API_KEY, 
         api_secret: process.env.CLOUDINARY_API_SECRET, // Click 'View API Keys' above to copy your API secret
+        
     });
 
-const uploadOnCloudinary = async(path) => {
-    try{
-        if(!path) return null
-        //upload the file on cloudinary
-       const response = await cloudinary.uploader.upload(path , {
+const uploadOnCloudinary = async (path) => {
+    try {
+
+        if (!path) return null;
+
+        const response = await cloudinary.uploader.upload(path, {
             resource_type: "auto"
-            
-        })  
-        // file has been uploaded
-        console.log(" file has been uploaded " , response.url);
-        fs.unlinkSync(path) 
+        });
+
+        console.log("Uploaded:", response.secure_url);
+
+        if (fs.existsSync(path)) {
+            fs.unlinkSync(path);
+        }
+
         return response;
-    }catch{
-        fs.unlinkSync(path) // remove the file from the server as the operation got failed
+
+    } catch (error) {
+
+        console.log("Cloudinary Error:", error);
+
+        if (path && fs.existsSync(path)) {
+            fs.unlinkSync(path);
+        }
+
         return null;
     }
-}
+};
 const deleteOnCloudinary = async (publicId) => {
 
     if (!publicId) {

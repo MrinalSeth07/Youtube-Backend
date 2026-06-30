@@ -62,17 +62,25 @@ const userSchema = new Schema(
 );
 
 // Hash password before saving
-userSchema.pre("save", async function (next) {
+// In Mongoose 8/9, if you declare your middleware as an async function, Mongoose treats it as promise-based middleware. You don't need next().
+// userSchema.pre("save", async function (next) {
 
+//     if (!this.isModified("password")) {
+//         return next();
+//     }
+
+//     this.password = await bcrypt.hash(this.password, 10);
+
+//     next();
+// });
+
+userSchema.pre("save", async function () {
     if (!this.isModified("password")) {
-        return next();
+        return;
     }
 
     this.password = await bcrypt.hash(this.password, 10);
-
-    next();
 });
-
 // Compare Password
 userSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password);
